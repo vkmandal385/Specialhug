@@ -107,41 +107,54 @@
     z-index: 5;
   }
 
-  #page4::before {
-    content: '💖💖💖';
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 50px;
-    opacity: 0.1;
-    animation: floatUp 6s linear infinite;
+  /* Shayari dots */
+  #dotsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
   }
 
-  @keyframes floatUp {
-    0% { transform: translate(-50%,0); }
-    100% { transform: translate(-50%,-200px); }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  /* I ❤️ YOU animation */
+  .dot.active {
+    background: #ff477e;
+    transform: scale(1.2);
+  }
+
   #iLoveYou {
     font-family: 'Pacifico', cursive;
-    font-size: 2.2rem;
+    font-size: 2rem;
     margin-top: 20px;
     color: #ff477e;
     letter-spacing: 5px;
-    opacity: 1;
+  }
+
+  /* Play button fallback */
+  #playBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    border-radius: 50px;
+    background: #ff6f91;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
   }
 </style>
 </head>
 <body>
 
-<!-- Background music -->
-<audio autoplay loop>
-  <source src="your-song.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Page 1 -->
+<!-- Pages -->
 <div class="card active" id="page1">
   <h1>Happy Hug Day Sweetheart 😘</h1>
   <img src="love.gif" alt="Cute Hug">
@@ -149,7 +162,6 @@
   <button onclick="nextPage(2)">Next ➡️</button>
 </div>
 
-<!-- Page 2 -->
 <div class="card" id="page2">
   <h1>Special Hug 🤍</h1>
   <img src="love1.gif" alt="Couple Hug">
@@ -157,7 +169,6 @@
   <button onclick="nextPage(3)">Next ➡️</button>
 </div>
 
-<!-- Page 3 -->
 <div class="card" id="page3">
   <h1>Forever Yours 💕</h1>
   <img src="love2.gif" alt="Love Hug">
@@ -165,16 +176,17 @@
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4: Shayari + I ❤️ YOU -->
 <div class="card" id="page4">
   <h1>For you my love 📖</h1>
   <p id="shayariText">"Aapki muskaan meri khushi hai 💖"</p>
-  <div>
-    <button onclick="prevShayari()">⬅️ Previous</button>
-    <button onclick="nextShayari()">Next ➡️</button>
-  </div>
+  <div id="dotsContainer"></div>
   <div id="iLoveYou"></div>
 </div>
+
+<!-- Background music -->
+<audio id="bgMusic" loop>
+  <source src="your-song.mp3" type="audio/mpeg">
+</audio>
 
 <script>
   // Floating hearts
@@ -208,12 +220,10 @@
     const activePage = document.getElementById('page'+num);
     activePage.classList.add('active');
 
-    // Trigger I ❤️ YOU animation on last page
     if(num === 4) animateILoveYou();
-    else document.getElementById('iLoveYou').textContent = '';
   }
 
-  // Shayari
+  // Shayari + dots
   const shayariList = [
     "Aapki muskaan meri khushi hai 💖",
     "Har hug aapse meri duniya complete karta hai 🌸",
@@ -223,21 +233,28 @@
     "I love you meri jaaan ❤️",
     "I love you itna jitna aap soch v nhi Sakti 😘❤️"
   ];
+
   let currentShayari = 0;
   const shayariText = document.getElementById('shayariText');
+  const dotsContainer = document.getElementById('dotsContainer');
 
-  function nextShayari(){
-    if(currentShayari < shayariList.length -1){
-      currentShayari++;
-      shayariText.textContent = shayariList[currentShayari];
-    }
-  }
+  shayariList.forEach((_, index)=>{
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if(index===0) dot.classList.add('active');
+    dot.addEventListener('click', ()=>{
+      currentShayari = index;
+      updateShayari();
+    });
+    dotsContainer.appendChild(dot);
+  });
 
-  function prevShayari(){
-    if(currentShayari > 0){
-      currentShayari--;
-      shayariText.textContent = shayariList[currentShayari];
-    }
+  function updateShayari(){
+    shayariText.textContent = shayariList[currentShayari];
+    document.querySelectorAll('.dot').forEach((d,i)=>{
+      if(i===currentShayari) d.classList.add('active');
+      else d.classList.remove('active');
+    });
   }
 
   // I ❤️ YOU animation
@@ -254,10 +271,20 @@
     }, 300);
   }
 
-  // Auto trigger animation if page4 already active (GitHub direct link)
-  if(document.getElementById('page4').classList.contains('active')){
-    animateILoveYou();
-  }
+  // Music autoplay with fallback button
+  const music = document.getElementById('bgMusic');
+  window.addEventListener('load', ()=>{
+    music.play().catch(()=>{
+      const btn = document.createElement('button');
+      btn.id = 'playBtn';
+      btn.textContent = '▶ Play Music';
+      document.body.appendChild(btn);
+      btn.addEventListener('click', ()=>{
+        music.play();
+        btn.remove();
+      });
+    });
+  });
 </script>
 
 </body>
