@@ -58,7 +58,6 @@ font-size:22px;
 text-align:center;
 padding:20px;
 transition:0.3s;
-max-width:90%;
 }
 
 .dots{
@@ -80,7 +79,6 @@ transition:0.3s;
 .dot.active{
 opacity:1;
 background:#ff4d6d;
-transform:scale(1.3);
 }
 </style>
 </head>
@@ -122,14 +120,14 @@ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
 document.getElementById("page"+num).classList.remove("hidden");
 }
 
-/* Song Start on First Touch */
+/* Song Auto Start on First Touch */
 let musicStarted=false;
 document.addEventListener("touchstart",function(){
 if(!musicStarted){
 document.getElementById("bgMusic").play();
 musicStarted=true;
 }
-},{once:true});
+});
 
 /* Shayari System */
 const shayari=[
@@ -156,7 +154,7 @@ text.style.opacity="0";
 setTimeout(()=>{
 text.innerText=shayari[index];
 text.style.opacity="1";
-},150);
+},120);
 
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
@@ -165,42 +163,52 @@ d.classList.toggle("active",i===index);
 
 updateShayari();
 
-/* TAP + SWIPE BOTH */
+/* TAP + SWIPE FIXED */
 
-let startX=0;
-let endX=0;
+let startX = 0;
+let startY = 0;
 
-const page4=document.getElementById("page4");
+const page4 = document.getElementById("page4");
 
-page4.addEventListener("touchstart",e=>{
-startX=e.touches[0].clientX;
+page4.addEventListener("touchstart", e => {
+startX = e.touches[0].clientX;
+startY = e.touches[0].clientY;
 });
 
-page4.addEventListener("touchend",e=>{
-endX=e.changedTouches[0].clientX;
-let diff=startX-endX;
+page4.addEventListener("touchend", e => {
 
-// Swipe
-if(Math.abs(diff)>60){
-if(diff>0 && index<shayari.length-1){
+let endX = e.changedTouches[0].clientX;
+let endY = e.changedTouches[0].clientY;
+
+let diffX = startX - endX;
+let diffY = startY - endY;
+
+/* Horizontal Swipe */
+if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+
+if (diffX > 0 && index < shayari.length - 1) {
 index++;
 }
-else if(diff<0 && index>0){
+else if (diffX < 0 && index > 0) {
 index--;
 }
+
 updateShayari();
 }
-else{
-// Tap
-let mid=window.innerWidth/2;
-if(startX>mid && index<shayari.length-1){
+else {
+/* Tap */
+let mid = window.innerWidth / 2;
+
+if (startX > mid && index < shayari.length - 1) {
 index++;
 }
-else if(startX<mid && index>0){
+else if (startX < mid && index > 0) {
 index--;
 }
+
 updateShayari();
 }
+
 });
 
 </script>
