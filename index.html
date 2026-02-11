@@ -3,133 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine</title>
+<title>Happy Hug Day 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  height:100%;
+  overflow:hidden;
 }
 
 body{
-font-family:'Poppins',sans-serif;
-overflow:hidden;
-background:linear-gradient(135deg,#1a0000,#4d0019);
-color:white;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  position:relative;
 }
 
-.page{
-width:100vw;
-height:100vh;
-position:absolute;
-top:0;
-left:0;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-transition:0.5s;
+/* Overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  flex-direction:column;
+  transition:0.5s ease;
 }
 
-h1{
-font-size:26px;
-text-align:center;
-padding:20px;
+.overlay button{
+  padding:15px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:50px;
+  background:#ff4f81;
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(255,255,255,0.4);
+  animation:pulse 1.5s infinite;
 }
 
-button{
-padding:12px 25px;
-border:none;
-border-radius:30px;
-background:#ff4d6d;
-color:white;
-font-size:16px;
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.1);}
+  100%{transform:scale(1);}
 }
 
-.hidden{
-display:none;
+/* Card */
+.card{
+  width:90vw;
+  max-width:400px;
+  height:85vh;
+  max-height:520px;
+  background:rgba(255,255,255,0.15);
+  border-radius:25px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  position:absolute;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  transition:0.4s ease;
 }
 
-/* Shayari page */
-
-#shayariText{
-font-size:22px;
-text-align:center;
-padding:20px;
-transition:0.3s;
+.card.active{
+  opacity:1;
+  z-index:10;
 }
 
+.card img{
+  width:180px;
+  border-radius:20px;
+  border:3px solid #fff;
+  margin:15px 0;
+}
+
+button.nextBtn{
+  background:#ff6f91;
+  border:none;
+  padding:10px 18px;
+  border-radius:30px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:15px;
+}
+
+/* Hearts */
+.heart{
+  position:absolute;
+  font-size:20px;
+  animation:float 6s linear forwards;
+}
+
+@keyframes float{
+  from{transform:translateY(0);opacity:1;}
+  to{transform:translateY(-120vh);opacity:0;}
+}
+
+/* Dots */
 .dots{
-position:absolute;
-bottom:30px;
-display:flex;
-gap:8px;
+  margin-top:15px;
 }
 
 .dot{
-width:8px;
-height:8px;
-border-radius:50%;
-background:white;
-opacity:0.4;
-transition:0.3s;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.4);
+  display:inline-block;
+  margin:4px;
 }
 
 .dot.active{
-opacity:1;
-background:#ff4d6d;
+  background:#fff;
+  transform:scale(1.4);
 }
 </style>
 </head>
 <body>
 
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <button onclick="startLove()">Tap to Feel Love ❤️</button>
+</div>
+
+<!-- Music -->
 <audio id="bgMusic" loop>
-<source src="song.mp3" type="audio/mpeg">
+  <source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <!-- Page 1 -->
-<div class="page" id="page1">
-<h1>Welcome ❤️</h1>
-<button onclick="nextPage(2)">Start</button>
+<div class="card active" id="page1">
+  <h1 style="font-family:'Pacifico';">Happy Hug Day 😘</h1>
+  <img src="love.gif">
+  <p>Virtual hug for you 🤗💖</p>
+  <button class="nextBtn" onclick="nextPage(2)">Next ➡️</button>
 </div>
 
 <!-- Page 2 -->
-<div class="page hidden" id="page2">
-<h1>Special For You 💕</h1>
-<button onclick="nextPage(3)">Next</button>
+<div class="card" id="page2">
+  <h1>Special Hug 🤍</h1>
+  <img src="love1.gif">
+  <p>Aapki hug meri favourite therapy hai 😍</p>
+  <button class="nextBtn" onclick="nextPage(3)">Next ➡️</button>
 </div>
 
 <!-- Page 3 -->
-<div class="page hidden" id="page3">
-<h1>Ready for Shayari? 🌸</h1>
-<button onclick="nextPage(4)">Open</button>
+<div class="card" id="page3">
+  <h1>Forever Yours 💕</h1>
+  <img src="love2.gif">
+  <p>Aapka hug sabse special hai 🌸</p>
+  <button class="nextBtn" onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4 Shayari -->
-<div class="page hidden" id="page4">
-<h1 id="shayariText"></h1>
-<div class="dots" id="dots"></div>
+<!-- Page 4 -->
+<div class="card" id="page4">
+  <h1>I ❤️ YOU</h1>
+  <p id="shayariText">Aapki muskaan meri khushi hai 💖</p>
+  <div class="dots" id="dots"></div>
 </div>
 
 <script>
 
-/* Navigation */
-function nextPage(num){
-document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
-document.getElementById("page"+num).classList.remove("hidden");
+/* Start Love */
+function startLove(){
+  document.getElementById("overlay").style.opacity="0";
+  setTimeout(()=>document.getElementById("overlay").style.display="none",500);
+  document.getElementById("bgMusic").play();
 }
 
-/* Song Auto Start on First Touch */
-let musicStarted=false;
-document.addEventListener("touchstart",function(){
-if(!musicStarted){
-document.getElementById("bgMusic").play();
-musicStarted=true;
+/* Page Switch */
+function nextPage(n){
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+  document.getElementById("page"+n).classList.add("active");
 }
-});
 
-/* Shayari System */
+/* Hearts */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.top="100vh";
+  h.style.fontSize=(16+Math.random()*20)+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},500);
+
+/* Shayari */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -144,73 +222,26 @@ const text=document.getElementById("shayariText");
 const dots=document.getElementById("dots");
 
 shayari.forEach((_,i)=>{
-const d=document.createElement("span");
-d.className="dot"+(i===0?" active":"");
-dots.appendChild(d);
+  const d=document.createElement("span");
+  d.className="dot"+(i===0?" active":"");
+  dots.appendChild(d);
 });
 
 function updateShayari(){
-text.style.opacity="0";
-setTimeout(()=>{
-text.innerText=shayari[index];
-text.style.opacity="1";
-},120);
-
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
-});
+  text.innerText=shayari[index];
+  document.querySelectorAll(".dot").forEach((d,i)=>{
+    d.classList.toggle("active", i===index);
+  });
 }
 
-updateShayari();
-
-/* TAP + SWIPE FIXED */
-
-let startX = 0;
-let startY = 0;
-
-const page4 = document.getElementById("page4");
-
-page4.addEventListener("touchstart", e => {
-startX = e.touches[0].clientX;
-startY = e.touches[0].clientY;
-});
-
-page4.addEventListener("touchend", e => {
-
-let endX = e.changedTouches[0].clientX;
-let endY = e.changedTouches[0].clientY;
-
-let diffX = startX - endX;
-let diffY = startY - endY;
-
-/* Horizontal Swipe */
-if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
-
-if (diffX > 0 && index < shayari.length - 1) {
-index++;
-}
-else if (diffX < 0 && index > 0) {
-index--;
-}
-
-updateShayari();
-}
-else {
-/* Tap */
-let mid = window.innerWidth / 2;
-
-if (startX > mid && index < shayari.length - 1) {
-index++;
-}
-else if (startX < mid && index > 0) {
-index--;
-}
-
-updateShayari();
-}
-
+document.getElementById("page4").addEventListener("click",e=>{
+  const mid=window.innerWidth/2;
+  if(e.clientX>mid && index<shayari.length-1) index++;
+  else if(e.clientX<mid && index>0) index--;
+  updateShayari();
 });
 
 </script>
 </body>
-</html>
+  </html>
+  
