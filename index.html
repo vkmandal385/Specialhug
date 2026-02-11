@@ -59,7 +59,7 @@ button{
   margin-top:10px;
 }
 
-/* Hearts */
+/* Floating Hearts */
 .heart{
   position:absolute;
   font-size:20px;
@@ -71,7 +71,7 @@ button{
   100%{transform:translateY(-800px);opacity:0;}
 }
 
-/* Dots */
+/* Shayari Dots */
 .dots{
   margin-top:20px;
 }
@@ -90,12 +90,17 @@ button{
   background:#fff;
   transform:scale(1.4);
 }
+
+/* Important for swipe */
+#page4{
+  touch-action:pan-y;
+}
 </style>
 </head>
 <body>
 
 <!-- AUTO MUSIC -->
-<audio id="bgMusic" autoplay loop>
+<audio id="bgMusic" loop preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
@@ -123,7 +128,7 @@ button{
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4 (Swipe Shayari) -->
+<!-- Page 4 -->
 <div class="card" id="page4">
   <h1>I ❤️ YOU</h1>
   <p id="shayariText">Aapki muskaan meri khushi hai 💖</p>
@@ -132,24 +137,26 @@ button{
 
 <script>
 
-/* Force Auto Play */
-window.addEventListener("load",function(){
-  const music=document.getElementById("bgMusic");
-  music.muted=true;
-  music.play().then(()=>{
-    music.muted=false;
-  }).catch(()=>{
-    document.body.addEventListener("click",()=>music.play(),{once:true});
-  });
-});
+/* ===== AUTO PLAY MUSIC ===== */
+const music=document.getElementById("bgMusic");
 
-/* Page Switch */
+function startMusic(){
+  music.play().catch(()=>{});
+}
+
+window.addEventListener("load",startMusic);
+document.addEventListener("click",startMusic);
+document.addEventListener("touchstart",startMusic);
+
+
+/* ===== PAGE SWITCH ===== */
 function nextPage(num){
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
   document.getElementById("page"+num).classList.add("active");
 }
 
-/* Floating hearts */
+
+/* ===== FLOATING HEARTS ===== */
 setInterval(()=>{
   const heart=document.createElement("div");
   heart.className="heart";
@@ -161,7 +168,8 @@ setInterval(()=>{
   setTimeout(()=>heart.remove(),6000);
 },400);
 
-/* Shayari Swipe Slider */
+
+/* ===== SHAYARI SWIPE ===== */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -188,23 +196,34 @@ function update(){
   document.querySelectorAll(".dot")[current].classList.add("active");
 }
 
-/* Swipe detection */
 let startX=0;
+let endX=0;
+const page4=document.getElementById("page4");
 
-document.getElementById("page4").addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-});
+page4.addEventListener("touchstart",e=>{
+  startX=e.changedTouches[0].screenX;
+},{passive:true});
 
-document.getElementById("page4").addEventListener("touchend",e=>{
-  let endX=e.changedTouches[0].clientX;
-  if(startX-endX>50 && current<shayari.length-1){
-    current++;
-    update();
+page4.addEventListener("touchmove",e=>{
+  endX=e.changedTouches[0].screenX;
+},{passive:true});
+
+page4.addEventListener("touchend",()=>{
+  let diff=startX-endX;
+
+  if(Math.abs(diff)>50){
+    if(diff>0 && current<shayari.length-1){
+      current++;
+      update();
+    }
+    else if(diff<0 && current>0){
+      current--;
+      update();
+    }
   }
-  if(endX-startX>50 && current>0){
-    current--;
-    update();
-  }
+
+  startX=0;
+  endX=0;
 });
 
 </script>
