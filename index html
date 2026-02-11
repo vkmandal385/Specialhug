@@ -21,34 +21,9 @@
     position: relative;
   }
 
-  /* Hearts */
-  .heart {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: red;
-    transform: rotate(45deg);
-    animation: float 6s infinite;
-  }
-  .heart::before,
-  .heart::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: red;
-    border-radius: 50%;
-  }
-  .heart::before { top: -10px; left: 0; }
-  .heart::after { left: 10px; top: 0; }
-
-  @keyframes float {
-    0% { transform: translateY(0) rotate(45deg); opacity: 1; }
-    100% { transform: translateY(-600px) rotate(45deg); opacity: 0; }
-  }
-
+  /* Card styling */
   .card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     padding: 40px 30px;
     border-radius: 25px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
@@ -102,6 +77,15 @@
     background: #ff477e;
     transform: scale(1.1);
   }
+
+  /* Heart emoji style */
+  .heart-emoji {
+    position: absolute;
+    pointer-events: none;
+    font-size: 20px;
+    user-select: none;
+    z-index: 5;
+  }
 </style>
 </head>
 <body>
@@ -109,15 +93,15 @@
 <!-- Page 1 -->
 <div class="card active" id="page1">
   <h1>Happy Hug Day Sweetheart 😘</h1>
-  <img src="cute-hug.png" alt="Cute Hug">
-  <p> Mai aapko virtual hug bej raha hu aap isse v feel kar lena! 🤗💖</p>
+  <img src="https://i.ibb.co/7J6NqvY/cute-hug.png" alt="Cute Hug">
+  <p>Mai aapko virtual hug bej raha hu, aap isse feel kar lena! 🤗💖</p>
   <button onclick="nextPage(2)">Next ➡️</button>
 </div>
 
 <!-- Page 2 -->
 <div class="card" id="page2">
   <h1>Special Hug 🤍</h1>
-  <img src="couple-hug.png" alt="Couple Hug">
+  <img src="https://i.ibb.co/8dFnfFk/couple-hug.png" alt="Couple Hug">
   <p>"Aapki hug meri favourite therapy hai 😍"</p>
   <button onclick="nextPage(3)">Next ➡️</button>
 </div>
@@ -125,12 +109,12 @@
 <!-- Page 3 -->
 <div class="card" id="page3">
   <h1>Forever Yours 💕</h1>
-  <img src="love-hug.png" alt="Love Hug">
+  <img src="https://i.ibb.co/5rkt3L7/love-hug.png" alt="Love Hug">
   <p>"Aapka hug toh bin Mosaam ki barsat la sakti hai 🌧️ ☀️"</p>
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4: Hindi Shayari Book -->
+<!-- Page 4: Shayari Book -->
 <div class="card" id="page4">
   <h1>For you my love 📖</h1>
   <p id="shayariText">"Aapki muskaan meri khushi hai 💖"</p>
@@ -145,18 +129,32 @@
   const colors = ['#ff6f91','#ffb347','#ffcc70','#ff6f91'];
   function createHeart(){
     const heart = document.createElement('div');
-    heart.classList.add('heart');
-    heart.style.left = Math.random()*window.innerWidth+'px';
-    heart.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-    heart.style.width = heart.style.height = (10+Math.random()*20)+'px';
+    heart.classList.add('heart-emoji');
+    heart.textContent = '💖';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.top = window.innerHeight + 'px';
+    heart.style.fontSize = (10 + Math.random() * 30) + 'px';
+    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
     document.body.appendChild(heart);
-    setTimeout(()=>{ heart.remove() },6000);
+
+    // Animate using JS
+    const anim = heart.animate([
+      { transform: 'translateY(0)', opacity: 1 },
+      { transform: `translateY(-700px)`, opacity: 0 }
+    ], {
+      duration: 6000,
+      easing: 'linear'
+    });
+
+    anim.onfinish = () => heart.remove();
   }
-  setInterval(createHeart,300);
+
+  setInterval(createHeart, 300);
 
   // Page switching
   function nextPage(num){
     const pages=['page1','page2','page3','page4'];
+    if(num > pages.length) return; // prevent error
     pages.forEach(id=>document.getElementById(id).classList.remove('active'));
     document.getElementById('page'+num).classList.add('active');
   }
@@ -168,8 +166,8 @@
     "Aapke bina toh mera dil adhoora sa lagta hai 🤗",
     "Mere liye aapka hug sabse bada gift hai 🎁",
     "Aapki baahon mein sab kuch perfect lagta hai 💕",
-    "I love you meri jaaan❤️",
-    "I love you itna jitna aap soch v nhi Sakti😘❤️"
+    "I love you meri jaaan ❤️",
+    "I love you itna jitna aap soch v nhi Sakti 😘❤️"
   ];
   let currentShayari = 0;
   const shayariText = document.getElementById('shayariText');
