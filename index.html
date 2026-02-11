@@ -101,7 +101,7 @@
 <!-- Page 2 -->
 <div class="card" id="page2">
   <h1>Special Hug 🤍</h1>
-  <img src="https://i.ibb.co/8dFnfFk/couple-hug.png" alt="Couple Hug">
+  <img src="love1.gif" alt="Couple Hug" width="180">
   <p>"Aapki hug meri favourite therapy hai 😍"</p>
   <button onclick="nextPage(3)">Next ➡️</button>
 </div>
@@ -109,7 +109,7 @@
 <!-- Page 3 -->
 <div class="card" id="page3">
   <h1>Forever Yours 💕</h1>
-  <img src="https://i.ibb.co/5rkt3L7/love-hug.png" alt="Love Hug">
+  <img src="love2.gif" alt="Love Hug" width="180">
   <p>"Aapka hug toh bin Mosaam ki barsat la sakti hai 🌧️ ☀️"</p>
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
@@ -137,7 +137,6 @@
     heart.style.color = colors[Math.floor(Math.random()*colors.length)];
     document.body.appendChild(heart);
 
-    // Animate using JS
     const anim = heart.animate([
       { transform: 'translateY(0)', opacity: 1 },
       { transform: `translateY(-700px)`, opacity: 0 }
@@ -154,7 +153,7 @@
   // Page switching
   function nextPage(num){
     const pages=['page1','page2','page3','page4'];
-    if(num > pages.length) return; // prevent error
+    if(num > pages.length) return; 
     pages.forEach(id=>document.getElementById(id).classList.remove('active'));
     document.getElementById('page'+num).classList.add('active');
   }
