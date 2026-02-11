@@ -10,7 +10,6 @@
 <style>
 body{
   margin:0;
-  padding:0;
   font-family:'Poppins',sans-serif;
   overflow:hidden;
   background:linear-gradient(135deg,#ffdde1,#ee9ca7);
@@ -23,6 +22,7 @@ body{
   position:relative;
 }
 
+/* Card */
 .card{
   background:rgba(255,255,255,0.15);
   padding:40px 30px;
@@ -58,6 +58,7 @@ button{
   margin-top:10px;
 }
 
+/* Hearts */
 .heart{
   position:absolute;
   font-size:20px;
@@ -69,6 +70,7 @@ button{
   100%{transform:translateY(-800px);opacity:0;}
 }
 
+/* Dots */
 .dots{
   margin-top:20px;
 }
@@ -91,8 +93,8 @@ button{
 </head>
 <body>
 
-<!-- AUTO MUSIC -->
-<audio id="bgMusic" autoplay loop>
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
@@ -129,24 +131,13 @@ button{
 
 <script>
 
-/* Auto Play Fix */
-window.addEventListener("load",function(){
-  const music=document.getElementById("bgMusic");
-  music.muted=true;
-  music.play().then(()=>{
-    music.muted=false;
-  }).catch(()=>{
-    document.body.addEventListener("click",()=>music.play(),{once:true});
-  });
-});
-
-/* Page Switch */
+/* PAGE SWITCH */
 function nextPage(num){
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
   document.getElementById("page"+num).classList.add("active");
 }
 
-/* Floating hearts */
+/* FLOATING HEARTS */
 setInterval(()=>{
   const heart=document.createElement("div");
   heart.className="heart";
@@ -158,7 +149,17 @@ setInterval(()=>{
   setTimeout(()=>heart.remove(),6000);
 },400);
 
-/* Shayari System */
+/* AUTO MUSIC (Mobile Safe) */
+const music=document.getElementById("bgMusic");
+function startMusic(){
+  music.play();
+  document.removeEventListener("touchstart",startMusic);
+  document.removeEventListener("click",startMusic);
+}
+document.addEventListener("touchstart",startMusic);
+document.addEventListener("click",startMusic);
+
+/* SHAYARI SLIDER */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -171,7 +172,9 @@ const shayari=[
 let current=0;
 const text=document.getElementById("shayariText");
 const dotsContainer=document.getElementById("dotsContainer");
+const page4=document.getElementById("page4");
 
+/* Create dots */
 shayari.forEach((_,i)=>{
   const dot=document.createElement("span");
   dot.classList.add("dot");
@@ -185,37 +188,41 @@ function update(){
   document.querySelectorAll(".dot")[current].classList.add("active");
 }
 
-/* Swipe + Tap Control */
-const page4=document.getElementById("page4");
-
+/* Swipe */
 let startX=0;
-
 page4.addEventListener("touchstart",e=>{
   startX=e.touches[0].clientX;
-});
+},{passive:true});
 
 page4.addEventListener("touchend",e=>{
   let endX=e.changedTouches[0].clientX;
   let diff=startX-endX;
 
-  if(Math.abs(diff)>50){
-    if(diff>0 && current<shayari.length-1){
-      current++;
-    }else if(diff<0 && current>0){
+  if(diff>50 && current<shayari.length-1){
+    current++;
+    update();
+  }
+  else if(diff<-50 && current>0){
+    current--;
+    update();
+  }
+},{passive:true});
+
+/* Half Screen Tap */
+page4.addEventListener("click",e=>{
+  const half=window.innerWidth/2;
+
+  if(e.clientX < half){
+    if(current>0){
       current--;
+      update();
     }
   }else{
-    let tapX=e.changedTouches[0].clientX;
-    let screenWidth=window.innerWidth;
-
-    if(tapX<screenWidth/2 && current>0){
-      current--;
-    }else if(tapX>=screenWidth/2 && current<shayari.length-1){
+    if(current<shayari.length-1){
       current++;
+      update();
     }
   }
-
-  update();
 });
 
 </script>
