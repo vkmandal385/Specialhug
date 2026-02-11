@@ -2,19 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Happy Hug Day 💖</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
-body{
+*{
   margin:0;
   padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+body{
   font-family:'Poppins',sans-serif;
   background:linear-gradient(135deg,#ffdde1,#ee9ca7);
-  height:100vh;
-  overflow:hidden;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -23,27 +31,24 @@ body{
   position:relative;
 }
 
-/* Card */
+/* CARD */
 .card{
-  width:90%;
+  width:90vw;
   max-width:400px;
-  min-height:450px;
+  height:85vh;
+  max-height:520px;
+  background:rgba(255,255,255,0.15);
+  border-radius:25px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  position:absolute;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  background:rgba(255,255,255,0.15);
-  padding:30px 20px;
-  border-radius:25px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  backdrop-filter:blur(10px);
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
   opacity:0;
   transition:0.4s ease;
-  box-sizing:border-box;
 }
 
 .card.active{
@@ -53,9 +58,10 @@ body{
 
 .card img{
   width:180px;
+  max-width:80%;
   border-radius:20px;
-  margin-bottom:15px;
   border:3px solid #fff;
+  margin:15px 0;
 }
 
 button{
@@ -66,34 +72,33 @@ button{
   color:#fff;
   font-weight:600;
   cursor:pointer;
-  margin-top:10px;
+  margin-top:15px;
 }
 
-/* Floating Hearts */
+/* HEARTS */
 .heart{
   position:absolute;
   font-size:20px;
-  animation:float 6s linear infinite;
+  animation:float 6s linear forwards;
 }
 
 @keyframes float{
-  0%{transform:translateY(0);opacity:1;}
-  100%{transform:translateY(-800px);opacity:0;}
+  from{transform:translateY(0);opacity:1;}
+  to{transform:translateY(-120vh);opacity:0;}
 }
 
-/* Dots */
+/* DOTS */
 .dots{
   margin-top:15px;
 }
 
 .dot{
-  height:10px;
   width:10px;
-  margin:5px;
-  display:inline-block;
+  height:10px;
   border-radius:50%;
   background:rgba(255,255,255,0.4);
-  transition:0.3s;
+  display:inline-block;
+  margin:4px;
 }
 
 .dot.active{
@@ -104,12 +109,12 @@ button{
 </head>
 <body>
 
-<!-- MUSIC (touch to start) -->
-<audio id="bgMusic" loop>
+<!-- AUDIO -->
+<audio id="bgMusic" loop preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Page 1 -->
+<!-- PAGE 1 -->
 <div class="card active" id="page1">
   <h1 style="font-family:'Pacifico';">Happy Hug Day 😘</h1>
   <img src="love.gif">
@@ -117,7 +122,7 @@ button{
   <button onclick="nextPage(2)">Next ➡️</button>
 </div>
 
-<!-- Page 2 -->
+<!-- PAGE 2 -->
 <div class="card" id="page2">
   <h1>Special Hug 🤍</h1>
   <img src="love1.gif">
@@ -125,7 +130,7 @@ button{
   <button onclick="nextPage(3)">Next ➡️</button>
 </div>
 
-<!-- Page 3 -->
+<!-- PAGE 3 -->
 <div class="card" id="page3">
   <h1>Forever Yours 💕</h1>
   <img src="love2.gif">
@@ -133,46 +138,44 @@ button{
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4 -->
+<!-- PAGE 4 -->
 <div class="card" id="page4">
   <h1>I ❤️ YOU</h1>
   <p id="shayariText">Aapki muskaan meri khushi hai 💖</p>
-  <div class="dots" id="dotsContainer"></div>
+  <div class="dots" id="dots"></div>
 </div>
 
 <script>
-
-/* Music start on first touch */
+/* ---------- MUSIC (GUARANTEED METHOD) ---------- */
 const music = document.getElementById("bgMusic");
 
-function startMusic(){
-  music.play();
-  document.removeEventListener("click", startMusic);
-  document.removeEventListener("touchstart", startMusic);
+function unlockMusic(){
+  music.play().catch(()=>{});
+  document.removeEventListener("touchstart", unlockMusic);
+  document.removeEventListener("click", unlockMusic);
 }
+document.addEventListener("touchstart", unlockMusic, {once:true});
+document.addEventListener("click", unlockMusic, {once:true});
 
-document.addEventListener("click", startMusic);
-document.addEventListener("touchstart", startMusic);
-
-/* Page Switch */
-function nextPage(num){
+/* ---------- PAGE SWITCH ---------- */
+function nextPage(n){
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-  document.getElementById("page"+num).classList.add("active");
+  document.getElementById("page"+n).classList.add("active");
 }
 
-/* Floating hearts */
+/* ---------- HEARTS ---------- */
 setInterval(()=>{
-  const heart=document.createElement("div");
-  heart.className="heart";
-  heart.innerHTML="💖";
-  heart.style.left=Math.random()*window.innerWidth+"px";
-  heart.style.top=window.innerHeight+"px";
-  heart.style.fontSize=(15+Math.random()*25)+"px";
-  document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),6000);
-},400);
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.top="100vh";
+  h.style.fontSize=(16+Math.random()*20)+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},500);
 
-/* Shayari */
+/* ---------- SHAYARI ---------- */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -182,39 +185,30 @@ const shayari=[
 "I love you meri jaan ❤️"
 ];
 
-let current=0;
+let index=0;
 const text=document.getElementById("shayariText");
-const dotsContainer=document.getElementById("dotsContainer");
+const dots=document.getElementById("dots");
 
 shayari.forEach((_,i)=>{
-  const dot=document.createElement("span");
-  dot.classList.add("dot");
-  if(i===0) dot.classList.add("active");
-  dotsContainer.appendChild(dot);
+  const d=document.createElement("span");
+  d.className="dot"+(i===0?" active":"");
+  dots.appendChild(d);
 });
 
-function update(){
-  text.textContent=shayari[current];
-  document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-  document.querySelectorAll(".dot")[current].classList.add("active");
+function updateShayari(){
+  text.innerText=shayari[index];
+  document.querySelectorAll(".dot").forEach((d,i)=>{
+    d.classList.toggle("active", i===index);
+  });
 }
 
-/* Half screen tap control */
-document.getElementById("page4").addEventListener("click",function(e){
-  const width = window.innerWidth;
-  if(e.clientX < width/2){
-    if(current>0){
-      current--;
-      update();
-    }
-  }else{
-    if(current<shayari.length-1){
-      current++;
-      update();
-    }
-  }
+/* HALF SCREEN TAP */
+document.getElementById("page4").addEventListener("click",e=>{
+  const mid=window.innerWidth/2;
+  if(e.clientX>mid && index<shayari.length-1) index++;
+  else if(e.clientX<mid && index>0) index--;
+  updateShayari();
 });
-
 </script>
 </body>
 </html>
