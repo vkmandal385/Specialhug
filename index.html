@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine</title>
+<title>Valentine ❤️</title>
 
 <style>
 *{
@@ -13,12 +13,13 @@ box-sizing:border-box;
 }
 
 body{
-font-family:sans-serif;
-overflow:hidden;
+font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#1a0000,#4d0019);
 color:white;
+overflow:hidden;
 }
 
+/* Pages */
 .page{
 width:100vw;
 height:100vh;
@@ -29,15 +30,15 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+text-align:center;
 }
 
 .hidden{
-display:none;
+display:none !important;
 }
 
 h1{
 font-size:26px;
-text-align:center;
 padding:20px;
 }
 
@@ -51,9 +52,9 @@ font-size:16px;
 cursor:pointer;
 }
 
+/* Shayari */
 #shayariText{
 font-size:22px;
-text-align:center;
 padding:20px;
 transition:0.3s;
 }
@@ -82,25 +83,30 @@ background:#ff4d6d;
 
 <body>
 
+<!-- MUSIC -->
 <audio id="bgMusic" loop>
 <source src="song.mp3" type="audio/mpeg">
 </audio>
 
+<!-- PAGE 1 -->
 <div class="page" id="page1">
 <h1>Welcome ❤️</h1>
 <button onclick="nextPage(2)">Start</button>
 </div>
 
+<!-- PAGE 2 -->
 <div class="page hidden" id="page2">
 <h1>Special For You 💕</h1>
 <button onclick="nextPage(3)">Next</button>
 </div>
 
+<!-- PAGE 3 -->
 <div class="page hidden" id="page3">
 <h1>Ready for Shayari? 🌸</h1>
 <button onclick="nextPage(4)">Open</button>
 </div>
 
+<!-- PAGE 4 -->
 <div class="page hidden" id="page4">
 <h1 id="shayariText"></h1>
 <div class="dots" id="dots"></div>
@@ -114,12 +120,16 @@ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
 document.getElementById("page"+num).classList.remove("hidden");
 }
 
-/* Music start on first touch */
-document.addEventListener("touchstart", function () {
+/* MUSIC start on first touch */
+let musicStarted=false;
+document.addEventListener("touchstart",function(){
+if(!musicStarted){
 document.getElementById("bgMusic").play().catch(()=>{});
-}, { once: true });
+musicStarted=true;
+}
+},{once:true});
 
-/* Shayari */
+/* Shayari Data */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -133,14 +143,16 @@ let index=0;
 const text=document.getElementById("shayariText");
 const dots=document.getElementById("dots");
 
+/* Create dots */
 shayari.forEach((_,i)=>{
 const d=document.createElement("span");
 d.className="dot"+(i===0?" active":"");
 dots.appendChild(d);
 });
 
+/* Update function */
 function updateShayari(){
-text.innerText=shayari[index];
+text.textContent=shayari[index];
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
@@ -166,11 +178,14 @@ let endY=e.changedTouches[0].clientY;
 let diffX=startX-endX;
 let diffY=startY-endY;
 
+/* SWIPE */
 if(Math.abs(diffX)>60 && Math.abs(diffX)>Math.abs(diffY)){
 if(diffX>0 && index<shayari.length-1) index++;
 else if(diffX<0 && index>0) index--;
 updateShayari();
 }
+
+/* TAP */
 else{
 let mid=window.innerWidth/2;
 if(startX>mid && index<shayari.length-1) index++;
@@ -182,4 +197,4 @@ updateShayari();
 </script>
 
 </body>
-</html>
+  </html>
