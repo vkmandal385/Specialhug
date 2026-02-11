@@ -123,14 +123,14 @@
     100% { transform: translate(-50%,-200px); }
   }
 
-  /* I ❤️ YOU animation on last page */
+  /* I ❤️ YOU animation */
   #iLoveYou {
     font-family: 'Pacifico', cursive;
     font-size: 2.2rem;
     margin-top: 20px;
     color: #ff477e;
     letter-spacing: 5px;
-    opacity: 0;
+    opacity: 1;
   }
 </style>
 </head>
@@ -165,7 +165,7 @@
   <button onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- Page 4: Shayari + I ❤️ YOU animation -->
+<!-- Page 4: Shayari + I ❤️ YOU -->
 <div class="card" id="page4">
   <h1>For you my love 📖</h1>
   <p id="shayariText">"Aapki muskaan meri khushi hai 💖"</p>
@@ -177,7 +177,7 @@
 </div>
 
 <script>
-  // Floating hearts animation
+  // Floating hearts
   const colors = ['#ff6f91','#ffb347','#ffcc70','#ff6f91'];
   function createHeart(){
     const heart = document.createElement('div');
@@ -196,7 +196,6 @@
       duration: 6000,
       easing: 'linear'
     });
-
     anim.onfinish = () => heart.remove();
   }
   setInterval(createHeart, 300);
@@ -209,12 +208,12 @@
     const activePage = document.getElementById('page'+num);
     activePage.classList.add('active');
 
-    // If last page, trigger I ❤️ YOU animation
+    // Trigger I ❤️ YOU animation on last page
     if(num === 4) animateILoveYou();
     else document.getElementById('iLoveYou').textContent = '';
   }
 
-  // Shayari book
+  // Shayari
   const shayariList = [
     "Aapki muskaan meri khushi hai 💖",
     "Har hug aapse meri duniya complete karta hai 🌸",
@@ -241,7 +240,7 @@
     }
   }
 
-  // Animate I ❤️ YOU letters one by one
+  // I ❤️ YOU animation
   function animateILoveYou(){
     const text = "I ❤️ YOU";
     const container = document.getElementById('iLoveYou');
@@ -253,6 +252,11 @@
         i++;
       } else clearInterval(interval);
     }, 300);
+  }
+
+  // Auto trigger animation if page4 already active (GitHub direct link)
+  if(document.getElementById('page4').classList.contains('active')){
+    animateILoveYou();
   }
 </script>
 
