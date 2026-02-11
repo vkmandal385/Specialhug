@@ -169,7 +169,8 @@ setInterval(()=>{
 },400);
 
 
-/* ===== SHAYARI SWIPE ===== */
+/* ===== SHAYARI CONTROL ===== */
+
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -182,6 +183,7 @@ const shayari=[
 let current=0;
 const text=document.getElementById("shayariText");
 const dotsContainer=document.getElementById("dotsContainer");
+const page4=document.getElementById("page4");
 
 shayari.forEach((_,i)=>{
   const dot=document.createElement("span");
@@ -196,9 +198,9 @@ function update(){
   document.querySelectorAll(".dot")[current].classList.add("active");
 }
 
+/* SWIPE */
 let startX=0;
 let endX=0;
-const page4=document.getElementById("page4");
 
 page4.addEventListener("touchstart",e=>{
   startX=e.changedTouches[0].screenX;
@@ -224,6 +226,24 @@ page4.addEventListener("touchend",()=>{
 
   startX=0;
   endX=0;
+});
+
+/* TAP LEFT / RIGHT */
+page4.addEventListener("click",function(e){
+  const width=window.innerWidth;
+  const tap=e.clientX;
+
+  if(tap < width/2){
+    if(current>0){
+      current--;
+      update();
+    }
+  }else{
+    if(current<shayari.length-1){
+      current++;
+      update();
+    }
+  }
 });
 
 </script>
