@@ -1,6 +1,216 @@
 <!DOCTYPE html>
-<html>
-<body style="background:black;color:white;">
-<h1>TEST WORKING</h1>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+overflow:hidden;
+background:linear-gradient(135deg,#1a0000,#4d0019);
+color:white;
+}
+
+.page{
+width:100vw;
+height:100vh;
+position:absolute;
+top:0;
+left:0;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:0.5s;
+}
+
+h1{
+font-size:26px;
+text-align:center;
+padding:20px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:#ff4d6d;
+color:white;
+font-size:16px;
+}
+
+.hidden{
+display:none;
+}
+
+/* Shayari page */
+
+#shayariText{
+font-size:22px;
+text-align:center;
+padding:20px;
+transition:0.3s;
+}
+
+.dots{
+position:absolute;
+bottom:30px;
+display:flex;
+gap:8px;
+}
+
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:white;
+opacity:0.4;
+transition:0.3s;
+}
+
+.dot.active{
+opacity:1;
+background:#ff4d6d;
+}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Page 1 -->
+<div class="page" id="page1">
+<h1>Welcome ❤️</h1>
+<button onclick="nextPage(2)">Start</button>
+</div>
+
+<!-- Page 2 -->
+<div class="page hidden" id="page2">
+<h1>Special For You 💕</h1>
+<button onclick="nextPage(3)">Next</button>
+</div>
+
+<!-- Page 3 -->
+<div class="page hidden" id="page3">
+<h1>Ready for Shayari? 🌸</h1>
+<button onclick="nextPage(4)">Open</button>
+</div>
+
+<!-- Page 4 Shayari -->
+<div class="page hidden" id="page4">
+<h1 id="shayariText"></h1>
+<div class="dots" id="dots"></div>
+</div>
+
+<script>
+
+/* Navigation */
+function nextPage(num){
+document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+document.getElementById("page"+num).classList.remove("hidden");
+}
+
+/* Song Auto Start on First Touch */
+let musicStarted=false;
+document.addEventListener("touchstart",function(){
+if(!musicStarted){
+document.getElementById("bgMusic").play();
+musicStarted=true;
+}
+});
+
+/* Shayari System */
+const shayari=[
+"Aapki muskaan meri khushi hai 💖",
+"Har hug meri duniya complete karta hai 🌸",
+"Aapke bina dil adhoora hai 🤗",
+"Aapka hug sabse bada gift hai 🎁",
+"Aapki baahon mein sab perfect lagta hai 💕",
+"I love you meri jaan ❤️"
+];
+
+let index=0;
+const text=document.getElementById("shayariText");
+const dots=document.getElementById("dots");
+
+shayari.forEach((_,i)=>{
+const d=document.createElement("span");
+d.className="dot"+(i===0?" active":"");
+dots.appendChild(d);
+});
+
+function updateShayari(){
+text.style.opacity="0";
+setTimeout(()=>{
+text.innerText=shayari[index];
+text.style.opacity="1";
+},120);
+
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",i===index);
+});
+}
+
+updateShayari();
+
+/* TAP + SWIPE FIXED */
+
+let startX = 0;
+let startY = 0;
+
+const page4 = document.getElementById("page4");
+
+page4.addEventListener("touchstart", e => {
+startX = e.touches[0].clientX;
+startY = e.touches[0].clientY;
+});
+
+page4.addEventListener("touchend", e => {
+
+let endX = e.changedTouches[0].clientX;
+let endY = e.changedTouches[0].clientY;
+
+let diffX = startX - endX;
+let diffY = startY - endY;
+
+/* Horizontal Swipe */
+if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+
+if (diffX > 0 && index < shayari.length - 1) {
+index++;
+}
+else if (diffX < 0 && index > 0) {
+index--;
+}
+
+updateShayari();
+}
+else {
+/* Tap */
+let mid = window.innerWidth / 2;
+
+if (startX > mid && index < shayari.length - 1) {
+index++;
+}
+else if (startX < mid && index > 0) {
+index--;
+}
+
+updateShayari();
+}
+
+});
+
+</script>
 </body>
 </html>
