@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Hug Day 💖</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
@@ -15,7 +15,6 @@
 }
 
 html,body{
-  width:100%;
   height:100%;
   overflow:hidden;
 }
@@ -31,7 +30,39 @@ body{
   position:relative;
 }
 
-/* CARD */
+/* Overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  flex-direction:column;
+  transition:0.5s ease;
+}
+
+.overlay button{
+  padding:15px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:50px;
+  background:#ff4f81;
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(255,255,255,0.4);
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.1);}
+  100%{transform:scale(1);}
+}
+
+/* Card */
 .card{
   width:90vw;
   max-width:400px;
@@ -58,13 +89,12 @@ body{
 
 .card img{
   width:180px;
-  max-width:80%;
   border-radius:20px;
   border:3px solid #fff;
   margin:15px 0;
 }
 
-button{
+button.nextBtn{
   background:#ff6f91;
   border:none;
   padding:10px 18px;
@@ -75,7 +105,7 @@ button{
   margin-top:15px;
 }
 
-/* HEARTS */
+/* Hearts */
 .heart{
   position:absolute;
   font-size:20px;
@@ -87,7 +117,7 @@ button{
   to{transform:translateY(-120vh);opacity:0;}
 }
 
-/* DOTS */
+/* Dots */
 .dots{
   margin-top:15px;
 }
@@ -109,36 +139,41 @@ button{
 </head>
 <body>
 
-<!-- AUDIO -->
-<audio id="bgMusic" loop preload="auto">
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <button onclick="startLove()">Tap to Feel Love ❤️</button>
+</div>
+
+<!-- Music -->
+<audio id="bgMusic" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PAGE 1 -->
+<!-- Page 1 -->
 <div class="card active" id="page1">
   <h1 style="font-family:'Pacifico';">Happy Hug Day 😘</h1>
   <img src="love.gif">
   <p>Virtual hug for you 🤗💖</p>
-  <button onclick="nextPage(2)">Next ➡️</button>
+  <button class="nextBtn" onclick="nextPage(2)">Next ➡️</button>
 </div>
 
-<!-- PAGE 2 -->
+<!-- Page 2 -->
 <div class="card" id="page2">
   <h1>Special Hug 🤍</h1>
   <img src="love1.gif">
   <p>Aapki hug meri favourite therapy hai 😍</p>
-  <button onclick="nextPage(3)">Next ➡️</button>
+  <button class="nextBtn" onclick="nextPage(3)">Next ➡️</button>
 </div>
 
-<!-- PAGE 3 -->
+<!-- Page 3 -->
 <div class="card" id="page3">
   <h1>Forever Yours 💕</h1>
   <img src="love2.gif">
   <p>Aapka hug sabse special hai 🌸</p>
-  <button onclick="nextPage(4)">Next ➡️</button>
+  <button class="nextBtn" onclick="nextPage(4)">Next ➡️</button>
 </div>
 
-<!-- PAGE 4 -->
+<!-- Page 4 -->
 <div class="card" id="page4">
   <h1>I ❤️ YOU</h1>
   <p id="shayariText">Aapki muskaan meri khushi hai 💖</p>
@@ -146,24 +181,21 @@ button{
 </div>
 
 <script>
-/* ---------- MUSIC (GUARANTEED METHOD) ---------- */
-const music = document.getElementById("bgMusic");
 
-function unlockMusic(){
-  music.play().catch(()=>{});
-  document.removeEventListener("touchstart", unlockMusic);
-  document.removeEventListener("click", unlockMusic);
+/* Start Love */
+function startLove(){
+  document.getElementById("overlay").style.opacity="0";
+  setTimeout(()=>document.getElementById("overlay").style.display="none",500);
+  document.getElementById("bgMusic").play();
 }
-document.addEventListener("touchstart", unlockMusic, {once:true});
-document.addEventListener("click", unlockMusic, {once:true});
 
-/* ---------- PAGE SWITCH ---------- */
+/* Page Switch */
 function nextPage(n){
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
   document.getElementById("page"+n).classList.add("active");
 }
 
-/* ---------- HEARTS ---------- */
+/* Hearts */
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart";
@@ -175,7 +207,7 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),6000);
 },500);
 
-/* ---------- SHAYARI ---------- */
+/* Shayari */
 const shayari=[
 "Aapki muskaan meri khushi hai 💖",
 "Har hug meri duniya complete karta hai 🌸",
@@ -202,13 +234,13 @@ function updateShayari(){
   });
 }
 
-/* HALF SCREEN TAP */
 document.getElementById("page4").addEventListener("click",e=>{
   const mid=window.innerWidth/2;
   if(e.clientX>mid && index<shayari.length-1) index++;
   else if(e.clientX<mid && index>0) index--;
   updateShayari();
 });
+
 </script>
 </body>
 </html>
